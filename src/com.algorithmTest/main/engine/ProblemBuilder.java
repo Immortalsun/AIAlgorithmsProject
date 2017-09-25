@@ -2,6 +2,7 @@ package com.algorithmTest.main.engine;
 
 import com.algorithmTest.main.agents.Agent;
 import com.algorithmTest.main.agents.EnvironmentalAgent;
+import com.algorithmTest.main.algorithms.AStar;
 import com.algorithmTest.main.algorithms.ProblemSet;
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -34,6 +35,7 @@ public class ProblemBuilder {
             }
         }
         aStarProblem.SetAgents(aStarAgents);
+        aStarProblem.SetAlgorithm(new AStar());
 
         return aStarProblem;
     }

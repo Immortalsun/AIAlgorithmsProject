@@ -16,6 +16,7 @@ public class ProblemSet {
     private ArrayList<Agent> agents;
     private boolean isRunning;
     private String description;
+    private Algorithm algorithm;
 
     public ProblemSet(ArrayList<Agent> actors, String description){
         this.description = description;
@@ -42,6 +43,10 @@ public class ProblemSet {
 
     public void SetAgents(ArrayList<Agent> actors){
         agents.addAll(actors);
+    }
+
+    public void SetAlgorithm(Algorithm alg){
+        algorithm = alg;
     }
 
     public void SetDescription(String description){
