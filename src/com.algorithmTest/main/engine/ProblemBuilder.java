@@ -27,15 +27,23 @@ public class ProblemBuilder {
     public static ProblemSet BuildAStarProblem(PApplet sketchParent){
         ProblemSet aStarProblem = new ProblemSet();
         ArrayList<Agent> aStarAgents = new ArrayList<>();
+        AStar astarAlg = new AStar();
+        int nodeXIndex = 0;
+        int nodeYIndex = 0;
         for(int x = 10; x<400; x+=10){
             for(int y = 10; y<250; y+=10){
                 EnvironmentalAgent nodeAgent = new EnvironmentalAgent(new PVector(x,y),10,10, sketchParent);
                 nodeAgent.SetShape(sketchParent.createShape(ELLIPSE, x,y, 8,8),66,134,244);
                 aStarAgents.add(nodeAgent);
+                astarAlg.AddAgentNode(nodeAgent, nodeXIndex, nodeYIndex);
+                nodeYIndex++;
             }
+            nodeYIndex = 0;
+            nodeXIndex++;
         }
         aStarProblem.SetAgents(aStarAgents);
-        aStarProblem.SetAlgorithm(new AStar());
+        astarAlg.BuildNodeNieghbors();
+        aStarProblem.SetAlgorithm(astarAlg);
 
         return aStarProblem;
     }

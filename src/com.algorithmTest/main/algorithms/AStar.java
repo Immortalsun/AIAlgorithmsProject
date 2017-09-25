@@ -11,6 +11,7 @@ import java.util.*;
 public class AStar extends Algorithm{
 
     private AStarNode start, end;
+    private AStarNode[][] aStarGraphArray;
     private Set<AStarNode> evaluatedNodes;
     private Set<AStarNode> discoveredSet;
     private Map<AStarNode, AStarNode> cameFromMap;
@@ -18,6 +19,7 @@ public class AStar extends Algorithm{
     private Map<AStarNode, Score> passThroughScoreMap;
 
     public AStar(){
+        aStarGraphArray = new AStarNode[39][24];
         evaluatedNodes = new HashSet<>();
         discoveredSet = new HashSet<>();
         cameFromMap = new TreeMap<>();
@@ -30,6 +32,53 @@ public class AStar extends Algorithm{
         start.SetIsStart(true);
         end = new AStarNode(endNode);
         end.SetIsEnd(true);
+    }
+
+    public void BuildNodeNieghbors(){
+        boolean northEnabled, southEnabled, westEnabled, eastEnabled;
+        northEnabled = southEnabled = westEnabled = eastEnabled = false;
+        for(int x = 0; x<aStarGraphArray.length; x++){
+            AStarNode[] innerArray = aStarGraphArray[x];
+            for(int y=0; y<innerArray.length; y++){
+                AStarNode current = innerArray[y];
+
+                westEnabled = x-1 >= 0;
+                eastEnabled = x+1 < aStarGraphArray.length;
+                northEnabled = y-1 >= 0;
+                southEnabled = y+1 < innerArray.length;
+                if(northEnabled) {
+                    current.AddNeightbor(aStarGraphArray[x][y-1]);
+                    if(eastEnabled){
+                        current.AddNeightbor(aStarGraphArray[x+1][y-1]);
+                    }
+                    if(westEnabled) {
+                        current.AddNeightbor(aStarGraphArray[x-1][y-1]);
+                    }
+                }
+
+                if(southEnabled){
+                    current.AddNeightbor(aStarGraphArray[x][y+1]);
+                    if(eastEnabled) {
+                        current.AddNeightbor(aStarGraphArray[x+1][y+1]);
+                    }
+                    if(westEnabled){
+                        current.AddNeightbor(aStarGraphArray[x-1][y+1]);
+                    }
+                }
+
+                if(eastEnabled){
+                    current.AddNeightbor(aStarGraphArray[x+1][y]);
+                }
+                if(westEnabled){
+                    current.AddNeightbor(aStarGraphArray[x-1][y]);
+                }
+                northEnabled = southEnabled = westEnabled = eastEnabled = false;
+            }
+        }
+    }
+
+    public void AddAgentNode(EnvironmentalAgent agent, int xIndex, int yIndex){
+        aStarGraphArray[xIndex][yIndex] = new AStarNode(agent);
     }
 
     public void Run(){
@@ -74,6 +123,14 @@ public class AStar extends Algorithm{
 
         public boolean GetIsVisited(){
             return isVisited;
+        }
+
+        public ArrayList<AStarNode> GetNeightbors() {
+            return neightbors;
+        }
+
+        public void AddNeightbor(AStarNode neighbor){
+            neightbors.add(neighbor);
         }
 
         public float GetXLocation(){
