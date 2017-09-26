@@ -21,7 +21,7 @@ public class MainWindow extends PApplet {
 
     public void settings()
     {
-        size(810,500);
+        size(810,600);
     }
 
     public void setup()

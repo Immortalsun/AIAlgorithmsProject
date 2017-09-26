@@ -81,19 +81,68 @@ public class AStar extends Algorithm{
         aStarGraphArray[xIndex][yIndex] = new AStarNode(agent);
     }
 
-    public void Run(){
-        fromStartScoreMap.put(start, new Score(0));
-        passThroughScoreMap.put(start, EstimateCost(start, end));
-
-        //run a star alg
+    @Override
+    public void SetupAndRun() {
 
     }
 
-    private Score EstimateCost(AStarNode nodeA, AStarNode nodeB){
+    public void Run(){
+        discoveredSet.add(start);
+        fromStartScoreMap.put(start, new Score(0));
+        passThroughScoreMap.put(start, new Score(DistanceBetween(start, end)));
+
+        //run a star alg
+        while(!discoveredSet.isEmpty()){
+            AStarNode current = FindLowestPassThroughNode();
+            if(current.equals(end))
+            {
+                ReconstructPath();
+                return;
+            }
+
+            discoveredSet.remove(current);
+            evaluatedNodes.add(current);
+
+            for(AStarNode neighbor : current.neightbors){
+                if(evaluatedNodes.contains(neighbor))
+                    continue;
+
+                if(!discoveredSet.contains(neighbor))
+                    discoveredSet.add(neighbor);
+
+                double tentativeFromStartScore = fromStartScoreMap.get(current).GetScore()
+                        + DistanceBetween(current, neighbor);
+
+                if(!fromStartScoreMap.containsKey(neighbor)
+                        || fromStartScoreMap.get(neighbor).GetScore() < tentativeFromStartScore){
+                    cameFromMap.put(neighbor, current);
+                    fromStartScoreMap.put(neighbor, new Score(tentativeFromStartScore));
+                    passThroughScoreMap.put(neighbor, new Score((tentativeFromStartScore + DistanceBetween(neighbor, end))));
+                }
+            }
+        }
+    }
+
+    private AStarNode FindLowestPassThroughNode(){
+        double lowestScore = Double.MAX_VALUE;
+        AStarNode lowestNode = null;
+        for(AStarNode node : passThroughScoreMap.keySet()){
+            if(passThroughScoreMap.get(node).GetScore() < lowestScore){
+                lowestScore = passThroughScoreMap.get(node).GetScore();
+                lowestNode = node;
+            }
+        }
+        return lowestNode;
+    }
+
+    private void ReconstructPath(){
+
+    }
+
+    private double DistanceBetween(AStarNode nodeA, AStarNode nodeB){
         double dist = Math.sqrt(
                 (Math.pow((nodeB.GetXLocation() - nodeA.GetXLocation()),2) + Math.pow((nodeB.GetYLocation() - nodeA.GetYLocation()),2)));
-
-        return new Score(dist);
+        return dist;
     }
 
     private class AStarNode{

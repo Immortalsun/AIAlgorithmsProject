@@ -6,4 +6,6 @@ package com.algorithmTest.main.algorithms;
 public abstract class Algorithm {
 
     public abstract void Run();
+
+    public void SetupAndRun(){}
 }
