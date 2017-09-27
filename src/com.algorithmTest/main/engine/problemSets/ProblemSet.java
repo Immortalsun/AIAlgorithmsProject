@@ -1,6 +1,8 @@
-package com.algorithmTest.main.algorithms;
+package com.algorithmTest.main.engine.problemSets;
 
 import com.algorithmTest.main.agents.Agent;
+import com.algorithmTest.main.algorithms.Algorithm;
+import processing.event.MouseEvent;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 public class ProblemSet {
 
     private ArrayList<Agent> agents;
-    private boolean isRunning;
+    private boolean isRunning, isReady;
     private String description;
     private Algorithm algorithm;
 
@@ -41,12 +43,24 @@ public class ProblemSet {
         return isRunning;
     }
 
+    public boolean GetIsReady(){
+        return isReady;
+    }
+
+    public void SetIsReady(boolean ready){
+        isReady = ready;
+    }
+
     public void SetAgents(ArrayList<Agent> actors){
         agents.addAll(actors);
     }
 
     public void SetAlgorithm(Algorithm alg){
         algorithm = alg;
+    }
+
+    public Algorithm GetAlgorithm() {
+        return algorithm;
     }
 
     public void SetDescription(String description){
@@ -56,6 +70,8 @@ public class ProblemSet {
     public void RunProblemSet(){
         isRunning = true;
     }
+
+    public void MouseClicked(float xCoord, float yCoord, boolean isLeftClick){}
 
     public void StopProblemSet(){
         isRunning = false;

@@ -2,6 +2,7 @@ package com.algorithmTest.main.agents;
 
 import com.algorithmTest.main.behaviors.Behavior;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PShape;
 import processing.core.PVector;
 
@@ -67,10 +68,18 @@ public class Agent {
         height = h;
     }
 
+    public PShape GetShape(){
+        return agentShape;
+    }
+
     public void SetShape(PShape shape, float rColor, float gColor, float bColor){
         agentShape = shape;
         agentShape.setFill(true);
-        agentShape.setFill(parent.color(rColor,gColor,bColor));
+        SetShapeColor(rColor, gColor, bColor);
+    }
+
+    public void SetShapeColor(float rColor, float gColor, float bColor){
+        agentShape.setFill(parent.color(rColor, gColor, bColor));
     }
 
     public void SetBehavior(Behavior behave){

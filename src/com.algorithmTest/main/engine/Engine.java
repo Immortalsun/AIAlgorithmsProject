@@ -1,7 +1,7 @@
 package com.algorithmTest.main.engine;
 
 import com.algorithmTest.main.agents.Agent;
-import com.algorithmTest.main.algorithms.ProblemSet;
+import com.algorithmTest.main.engine.problemSets.ProblemSet;
 import processing.core.PApplet;
 
 import java.util.ArrayList;
@@ -25,12 +25,16 @@ public class Engine {
         agents = currentProblem.GetAgents();
     }
 
+    public ProblemSet GetCurrentProblem(){
+        return currentProblem;
+    }
+
     public void RunProblem(){
         currentProblem.RunProblemSet();
     }
 
     public void Update(){
-        if(currentProblem.GetIsRunning()){
+        if(!agents.isEmpty()){
             for(Agent a : agents){
                 a.Update();
             }
@@ -38,7 +42,7 @@ public class Engine {
     }
 
     public void Display(){
-        if(currentProblem.GetIsRunning()){
+        if(!agents.isEmpty()){
             for(Agent a : agents){
                 a.Display();
             }

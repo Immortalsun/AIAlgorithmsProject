@@ -2,6 +2,7 @@ package com.algorithmTest.main.algorithms;
 
 import com.algorithmTest.main.agents.Agent;
 import com.algorithmTest.main.agents.EnvironmentalAgent;
+import processing.core.PVector;
 
 import java.util.*;
 
@@ -17,20 +18,32 @@ public class AStar extends Algorithm{
     private Map<AStarNode, AStarNode> cameFromMap;
     private Map<AStarNode, Score> fromStartScoreMap;
     private Map<AStarNode, Score> passThroughScoreMap;
+    public ArrayList<PVector> FinalRoute;
 
     public AStar(){
-        aStarGraphArray = new AStarNode[39][24];
+        aStarGraphArray = new AStarNode[30][20];
         evaluatedNodes = new HashSet<>();
         discoveredSet = new HashSet<>();
-        cameFromMap = new TreeMap<>();
-        fromStartScoreMap = new TreeMap<>();
-        passThroughScoreMap = new TreeMap<>();
+        cameFromMap = new HashMap<>();
+        fromStartScoreMap = new HashMap<>();
+        passThroughScoreMap = new HashMap<>();
     }
 
-    public void SetStartAndGoalNodes(EnvironmentalAgent startNode, EnvironmentalAgent endNode){
-        start = new AStarNode(startNode);
+    public void SetStartNode(EnvironmentalAgent startNode){
+        int nodeX = (int)(startNode.GetLocation().x/20);
+        int nodeY = (int)(startNode.GetLocation().y/20);
+        if(nodeX < 0)
+            nodeX = 0;
+        if(nodeY < 0)
+            nodeY =0;
+        start = aStarGraphArray[nodeX][nodeY];
         start.SetIsStart(true);
-        end = new AStarNode(endNode);
+    }
+
+    public void SetGoalNode(EnvironmentalAgent endNode){
+        int nodeX = (int)(endNode.GetLocation().x/20);
+        int nodeY = (int)(endNode.GetLocation().y/20);
+        end = aStarGraphArray[nodeX][nodeY];
         end.SetIsEnd(true);
     }
 
@@ -96,7 +109,7 @@ public class AStar extends Algorithm{
             AStarNode current = FindLowestPassThroughNode();
             if(current.equals(end))
             {
-                ReconstructPath();
+                ReconstructPath(current);
                 return;
             }
 
@@ -110,7 +123,8 @@ public class AStar extends Algorithm{
                 if(!discoveredSet.contains(neighbor))
                     discoveredSet.add(neighbor);
 
-                double tentativeFromStartScore = fromStartScoreMap.get(current).GetScore()
+                double currentScore = fromStartScoreMap.get(current).GetScore();
+                double tentativeFromStartScore = currentScore
                         + DistanceBetween(current, neighbor);
 
                 if(!fromStartScoreMap.containsKey(neighbor)
@@ -126,7 +140,7 @@ public class AStar extends Algorithm{
     private AStarNode FindLowestPassThroughNode(){
         double lowestScore = Double.MAX_VALUE;
         AStarNode lowestNode = null;
-        for(AStarNode node : passThroughScoreMap.keySet()){
+        for(AStarNode node : discoveredSet){
             if(passThroughScoreMap.get(node).GetScore() < lowestScore){
                 lowestScore = passThroughScoreMap.get(node).GetScore();
                 lowestNode = node;
@@ -135,8 +149,14 @@ public class AStar extends Algorithm{
         return lowestNode;
     }
 
-    private void ReconstructPath(){
-
+    private void ReconstructPath(AStarNode current){
+        ArrayList<PVector> totalPath = new ArrayList<>();
+        totalPath.add(new PVector(current.GetXLocation(), current.GetYLocation()));
+        while(cameFromMap.getOrDefault(current, null) != null){
+            current = cameFromMap.get(current);
+            totalPath.add(new PVector(current.GetXLocation(), current.GetYLocation()));
+        }
+        FinalRoute = totalPath;
     }
 
     private double DistanceBetween(AStarNode nodeA, AStarNode nodeB){
@@ -145,7 +165,7 @@ public class AStar extends Algorithm{
         return dist;
     }
 
-    private class AStarNode{
+    private class AStarNode implements Comparable<AStarNode>{
 
         private ArrayList<AStarNode> neightbors;
         private boolean isStart, isEnd, isAvailable, isVisited;
@@ -206,6 +226,20 @@ public class AStar extends Algorithm{
             isVisited = visited;
         }
 
+        @Override
+        public int compareTo(AStarNode o) {
+            if(xLocation > o.xLocation)
+                return 1;
+
+            if(xLocation < o.xLocation)
+                return -1;
+
+            if(xLocation == o.xLocation &&
+                    yLocation == o.yLocation)
+                return 0;
+
+            return 1;
+        }
     }
 
     private class Score{
