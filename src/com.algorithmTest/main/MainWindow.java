@@ -13,8 +13,8 @@ import java.util.ArrayList;
  */
 public class MainWindow extends PApplet {
 
-    private ArrayList<ProblemSet> problems = new ArrayList<>();
     private Engine engine = new Engine(this);
+    private boolean _problemComplete, _problemReady;
 
     public static void main(String[] args) {
         PApplet.main(MainWindow.class.getName());
@@ -27,9 +27,7 @@ public class MainWindow extends PApplet {
 
     public void setup()
     {
-        ProblemSet aStar = ProblemBuilder.BuildAStarProblem(this);
-        problems.add(aStar);
-        engine.SetProblem(aStar);
+        engine.BuildProblems();
         textSize(18);
         fill(102,153, 51);
     }
@@ -47,14 +45,30 @@ public class MainWindow extends PApplet {
             fill(255,255,255);
             text("RUN",415,420);
         }
+        else if(_problemComplete){
+            fill(176,54, 241);
+            rect(400, 400,80, 30);
+            fill(255,255,255);
+            text("RESET",415,420);
+        }
     }
 
     @Override
     public void mouseClicked(MouseEvent event) {
         engine.GetCurrentProblem().MouseClicked(mouseX,mouseY,mouseButton == LEFT);
+        _problemReady = engine.GetCurrentProblem().GetIsReady();
         if(mouseX >= 400 && mouseX < 480
-                && mouseY >= 400 && mouseY < 430){
-            engine.RunProblem();
+                && mouseY >= 400 && mouseY < 430
+                && _problemReady){
+            if(!_problemComplete){
+                engine.RunProblem();
+                _problemComplete = true;
+            }
+
+            else{
+                engine.ResetProblem();
+                _problemComplete = false;
+            }
         }
     }
 }

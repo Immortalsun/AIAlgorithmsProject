@@ -2,6 +2,7 @@ package com.algorithmTest.main.engine.problemSets;
 
 import com.algorithmTest.main.agents.Agent;
 import com.algorithmTest.main.algorithms.Algorithm;
+import processing.core.PApplet;
 import processing.event.MouseEvent;
 
 import java.lang.reflect.Array;
@@ -59,6 +60,8 @@ public class ProblemSet {
         algorithm = alg;
     }
 
+    public void SetIsRunning(boolean running) { isRunning = false; }
+
     public Algorithm GetAlgorithm() {
         return algorithm;
     }
@@ -69,6 +72,15 @@ public class ProblemSet {
 
     public void RunProblemSet(){
         isRunning = true;
+    }
+
+    public void Initialize(PApplet sketchParent){
+    }
+
+    public void Reset(PApplet sketchParent){
+        agents.clear();
+        isRunning = false;
+        isReady = false;
     }
 
     public void MouseClicked(float xCoord, float yCoord, boolean isLeftClick){}

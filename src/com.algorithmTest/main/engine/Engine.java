@@ -13,11 +13,17 @@ public class Engine {
 
     private ArrayList<Agent> agents;
     private PApplet windowParent;
+    private ArrayList<ProblemSet> problems;
     private ProblemSet currentProblem;
 
     public Engine(PApplet parent){
         agents = new ArrayList<>();
         windowParent = parent;
+    }
+
+    public void BuildProblems(){
+        problems = ProblemBuilder.BuildAllProblems(windowParent);
+        SetProblem(problems.get(0));
     }
 
     public void SetProblem(ProblemSet problem){
@@ -31,6 +37,10 @@ public class Engine {
 
     public void RunProblem(){
         currentProblem.RunProblemSet();
+    }
+
+    public void ResetProblem() {
+        currentProblem.Reset(windowParent);
     }
 
     public void Update(){

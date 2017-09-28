@@ -47,6 +47,15 @@ public class AStar extends Algorithm{
         end.SetIsEnd(true);
     }
 
+    public void SetNodeUnavailable(EnvironmentalAgent node){
+        int nodeX = (int)(node.GetLocation().x/20);
+        int nodeY = (int)(node.GetLocation().y/20);
+        AStarNode aStarNode = aStarGraphArray[nodeX][nodeY];
+        if(aStarNode.GetIsAvailable()){
+            aStarNode.SetIsAvailable(false);
+        }
+    }
+
     public void BuildNodeNieghbors(){
         boolean northEnabled, southEnabled, westEnabled, eastEnabled;
         northEnabled = southEnabled = westEnabled = eastEnabled = false;
@@ -117,7 +126,7 @@ public class AStar extends Algorithm{
             evaluatedNodes.add(current);
 
             for(AStarNode neighbor : current.neightbors){
-                if(evaluatedNodes.contains(neighbor))
+                if(evaluatedNodes.contains(neighbor) || !neighbor.GetIsAvailable())
                     continue;
 
                 if(!discoveredSet.contains(neighbor))
