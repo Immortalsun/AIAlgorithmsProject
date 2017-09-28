@@ -16,6 +16,8 @@ public class MainWindow extends PApplet {
     private Engine engine = new Engine(this);
     private boolean _problemComplete, _problemReady;
 
+    private float mouseStartX, mouseStartY;
+
     public static void main(String[] args) {
         PApplet.main(MainWindow.class.getName());
     }
@@ -70,5 +72,22 @@ public class MainWindow extends PApplet {
                 _problemComplete = false;
             }
         }
+    }
+
+    @Override
+    public void mousePressed() {
+        mouseStartX = mouseX;
+        mouseStartY = mouseY;
+    }
+
+    @Override
+    public void mouseDragged() {
+        rect(mouseStartX, mouseStartY, mouseX-mouseStartX,mouseY-mouseStartY);
+    }
+
+    @Override
+    public void mouseReleased() {
+        mouseStartX = 0;
+        mouseStartY = 0;
     }
 }
