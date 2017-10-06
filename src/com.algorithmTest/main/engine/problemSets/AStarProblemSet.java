@@ -76,6 +76,16 @@ public class AStarProblemSet extends ProblemSet {
         }
     }
 
+    @Override
+    public void SelectionApplied(float[] selectionRect){
+        for(Agent e : this.GetAgents()){
+            if(IsPointWithinRectangle(e.GetLocation().x, e.GetLocation().y, selectionRect)){
+                e.SetShapeColor(145,89,5);
+                SetNodeUnavailable((EnvironmentalAgent)e);
+            }
+        }
+    }
+
     private void SetStart(EnvironmentalAgent node){
         AStar alg = (AStar)this.GetAlgorithm();
         alg.SetStartNode(node);
@@ -96,6 +106,15 @@ public class AStarProblemSet extends ProblemSet {
 
     private boolean IsPointWithinCircle(float x, float y, float centerX, float centerY, float radius){
         return radius > Math.sqrt(Math.pow((x - centerX),2) + Math.pow((y - centerY),2));
+    }
+
+    private boolean IsPointWithinRectangle(float x, float y, float[] rectangleArray){
+        float rectLeft = rectangleArray[0];
+        float rectTop = rectangleArray[1];
+        float rectRight = rectLeft + rectangleArray[2];
+        float rectBottom = rectTop + rectangleArray[3];
+
+        return ((rectLeft <= x) && (x <= rectRight)) && ((rectTop <= y) && (y <= rectBottom));
     }
 
     @Override

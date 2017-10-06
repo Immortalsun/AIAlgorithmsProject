@@ -85,6 +85,8 @@ public class ProblemSet {
 
     public void MouseClicked(float xCoord, float yCoord, boolean isLeftClick){}
 
+    public void SelectionApplied(float[] selectionRect){}
+
     public void StopProblemSet(){
         isRunning = false;
     }

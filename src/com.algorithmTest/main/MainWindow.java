@@ -4,6 +4,7 @@ import com.algorithmTest.main.engine.problemSets.ProblemSet;
 import com.algorithmTest.main.engine.Engine;
 import com.algorithmTest.main.engine.ProblemBuilder;
 import processing.core.PApplet;
+import processing.core.PVector;
 import processing.event.MouseEvent;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 public class MainWindow extends PApplet {
 
     private Engine engine = new Engine(this);
-    private boolean _problemComplete, _problemReady;
+    private boolean _problemComplete, _problemReady, _dragging;
 
     private float mouseStartX, mouseStartY;
 
@@ -53,6 +54,7 @@ public class MainWindow extends PApplet {
             fill(255,255,255);
             text("RESET",415,420);
         }
+        drawOnDrag();
     }
 
     @Override
@@ -82,12 +84,30 @@ public class MainWindow extends PApplet {
 
     @Override
     public void mouseDragged() {
-        rect(mouseStartX, mouseStartY, mouseX-mouseStartX,mouseY-mouseStartY);
+        _dragging = true;
     }
 
     @Override
     public void mouseReleased() {
+        float[] selectionRect = new float[4];
+        float xCoord = Math.min(mouseX, mouseStartX);
+        float yCoord = Math.min(mouseY, mouseStartY);
+
+        selectionRect[0] = xCoord;
+        selectionRect[1] = yCoord;
+        selectionRect[2] = Math.abs(mouseX-mouseStartX);
+        selectionRect[3] = Math.abs(mouseY-mouseStartY);
         mouseStartX = 0;
         mouseStartY = 0;
+        _dragging = false;
+        engine.GetCurrentProblem().SelectionApplied(selectionRect);
+    }
+
+    private void drawOnDrag(){
+        if(_dragging){
+            noFill();
+            stroke(0,0,0);
+            rect(mouseStartX, mouseStartY, mouseX-mouseStartX,mouseY-mouseStartY);
+        }
     }
 }
